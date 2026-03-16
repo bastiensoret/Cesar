@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>César</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 300px;
+      background: #0c0c18;
+      color: #e8e8ee;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow-x: hidden;
+      font-size: 13px;
+    }
+
+    .header {
+      background: #13132a;
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-icon {
+      width: 22px;
+      height: 22px;
+      color: #9a9ab0;
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: #d0d0e0;
+      letter-spacing: 0.02em;
+    }
+
+    .header-toggle {
+      position: relative;
+      width: 36px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .header-toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+
+    .header-toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+      transition: 0.25s;
+    }
+
+    .header-toggle-slider::before {
+      content: "";
+      position: absolute;
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background: #555;
+      border-radius: 50%;
+      transition: 0.25s;
+    }
+
+    .header-toggle input:checked + .header-toggle-slider {
+      background: rgba(130,180,130,0.35);
+    }
+
+    .header-toggle input:checked + .header-toggle-slider::before {
+      transform: translateX(16px);
+      background: #7bc47b;
+    }
+
+    .main { padding: 16px 20px; }
+
+    .parasite-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 10px;
+      margin-bottom: 14px;
+    }
+
+    .parasite-label {
+      font-size: 12px;
+      color: #808098;
+    }
+
+    .parasite-value {
+      font-size: 24px;
+      font-weight: 600;
+      color: #d0d0e0;
+      line-height: 1;
+    }
+
+    .web-search-section {
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 10px;
+      margin-bottom: 14px;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .toggle-label { font-size: 13px; color: #c0c0d0; }
+
+    .web-search-desc {
+      font-size: 10px;
+      color: #606078;
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .toggle {
+      position: relative;
+      width: 36px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+      transition: 0.25s;
+    }
+
+    .toggle-slider::before {
+      content: "";
+      position: absolute;
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background: #555;
+      border-radius: 50%;
+      transition: 0.25s;
+    }
+
+    .toggle input:checked + .toggle-slider {
+      background: rgba(130,180,130,0.35);
+    }
+
+    .toggle input:checked + .toggle-slider::before {
+      transform: translateX(16px);
+      background: #7bc47b;
+    }
+
+    .reveal-btn {
+      width: 100%;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #606078;
+      font-size: 11px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .reveal-btn:hover {
+      background: rgba(255,255,255,0.025);
+      color: #808098;
+    }
+
+    .reveal-arrow {
+      transition: transform 0.25s;
+      font-size: 9px;
+    }
+
+    .reveal-btn.open .reveal-arrow { transform: rotate(180deg); }
+
+    .reveal-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .reveal-content.open { max-height: 500px; }
+
+    .reveal-inner {
+      padding: 14px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .group-label {
+      font-size: 9px;
+      color: #4a4a60;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: -2px;
+    }
+
+    .provider-select {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 8px;
+      padding: 7px 10px;
+      color: #c0c0d0;
+      font-size: 11px;
+      outline: none;
+      -webkit-appearance: none;
+      font-family: inherit;
+    }
+
+    .provider-select option { background: #13132a; }
+
+    .api-key-row { display: flex; gap: 6px; }
+
+    .api-key-input {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 8px;
+      padding: 7px 10px;
+      color: #c0c0d0;
+      font-size: 11px;
+      font-family: 'Courier New', monospace;
+      outline: none;
+    }
+
+    .api-key-btn {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 7px 12px;
+      color: #808098;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .api-key-btn:hover { background: rgba(255,255,255,0.1); color: #c0c0d0; }
+
+    .api-status { font-size: 10px; color: #606078; }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 0;
+    }
+
+    .setting-text { font-size: 12px; color: #808098; }
+
+    .footer {
+      padding: 10px 20px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      text-align: center;
+    }
+
+    .footer-text {
+      font-size: 10px;
+      font-weight: 400;
+      color: #3a3a4e;
+      letter-spacing: 0.03em;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-left">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M9 9h.01M15 9h.01"/>
+      </svg>
+      <span class="logo-text">César</span>
+    </div>
+    <label class="header-toggle" title="Toggle detection">
+      <input type="checkbox" id="toggle-active" checked>
+      <span class="header-toggle-slider"></span>
+    </label>
+  </div>
+
+  <div class="main">
+
+    <div class="parasite-row">
+      <span class="parasite-label">Parasites detected</span>
+      <span class="parasite-value" id="posts-flagged">0</span>
+    </div>
+
+    <div class="web-search-section">
+      <div class="toggle-row">
+        <span class="toggle-label">Web search</span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-websearch">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="web-search-desc">
+        AI searches for the exact source online to cite in the comment. More accurate, but slower (~2x).
+      </div>
+    </div>
+
+    <button class="reveal-btn" id="reveal-btn">
+      <span>Settings</span>
+      <span class="reveal-arrow">▼</span>
+    </button>
+
+    <div class="reveal-content" id="reveal-content">
+      <div class="reveal-inner">
+
+        <div class="group-label">Provider</div>
+        <select class="provider-select" id="provider-select">
+          <option value="auto">Auto-detect</option>
+          <option value="anthropic">Anthropic — Haiku 4.5</option>
+          <option value="openai">OpenAI — GPT-5 mini</option>
+          <option value="gemini">Google — Gemini 3 Flash</option>
+          <option value="grok">xAI — Grok 4.1 Fast</option>
+        </select>
+
+        <div class="group-label">API key</div>
+        <div class="api-key-row">
+          <input type="password" class="api-key-input" id="api-key-input" placeholder="sk-ant-... / sk-... / AIza...">
+          <button class="api-key-btn" id="api-key-save">OK</button>
+        </div>
+        <div class="api-status" id="api-status">No API key — regex only</div>
+
+        <div class="group-label">Options</div>
+
+        <div class="setting-row">
+          <span class="setting-text">Auto-expand posts</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-expand">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <span class="setting-text">Mode debug</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-debug">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span class="footer-text">Give back to César</span>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

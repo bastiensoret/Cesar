@@ -1,0 +1,383 @@
+/* César v0.4.5 — Dark blue compact overlay */
+
+.sourceit-overlay,
+.sourceit-overlay * {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+.sourceit-overlay {
+  position: relative;
+  z-index: 100;
+  margin: 0 0 8px 0;
+  padding: 0 16px;
+  animation: sourceit-slideIn 0.3s ease-out;
+}
+
+.sourceit-overlay.sourceit-hidden { display: none; }
+
+.sourceit-badge {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+
+.sourceit-severity-high .sourceit-badge {
+  border-left: 3px solid #ff4757;
+}
+
+.sourceit-severity-medium .sourceit-badge {
+  border-left: 3px solid #ffa502;
+}
+
+.sourceit-severity-low .sourceit-badge {
+  border-left: 3px solid #3742fa;
+}
+
+.sourceit-badge-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.sourceit-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  color: #ff6b81;
+}
+
+.sourceit-icon svg { width: 14px; height: 14px; }
+
+.sourceit-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #f1f2f6;
+  flex-grow: 1;
+}
+
+.sourceit-reason-line {
+  display: block;
+  font-size: 12px;
+  color: #c8d0da;
+  padding: 6px 12px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.sourceit-reason-cleared {
+  color: #c8d0da;
+  border-bottom: none;
+}
+
+.sourceit-score {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.sourceit-severity-high .sourceit-score {
+  background: rgba(255,71,87,0.2);
+  color: #ff6b81;
+}
+
+.sourceit-severity-medium .sourceit-score {
+  background: rgba(255,165,2,0.2);
+  color: #ffbe76;
+}
+
+.sourceit-severity-low .sourceit-score {
+  background: rgba(255,255,255,0.08);
+  color: #dfe4ea;
+}
+
+.sourceit-llm-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(46,213,115,0.2);
+  color: #7bed9f;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sourceit-no-ai-badge {
+  font-size: 8px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.06);
+  color: #747d8c;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.sourceit-no-ai-notice {
+  font-size: 10px;
+  color: #606878;
+  margin-bottom: 8px;
+  padding: 6px 8px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 4px;
+  border-left: 2px solid #747d8c;
+  line-height: 1.4;
+}
+
+.sourceit-dismiss {
+  background: none;
+  border: none;
+  color: #747d8c;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  transition: all 0.15s;
+}
+
+.sourceit-dismiss svg { width: 12px; height: 12px; }
+.sourceit-dismiss:hover { background: rgba(255,255,255,0.1); color: #f1f2f6; }
+
+.sourceit-badge-body {
+  padding: 8px 12px 10px;
+}
+
+.sourceit-explanation {
+  font-size: 12px;
+  color: #c8d0da;
+  margin: 0 0 8px 0;
+}
+
+.sourceit-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.sourceit-detail-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 11px;
+  padding: 4px 8px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 4px;
+}
+
+.sourceit-detail-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  color: #747d8c;
+}
+
+.sourceit-detail-icon svg { width: 11px; height: 11px; }
+
+.sourceit-detail-label {
+  font-weight: 600;
+  color: #747d8c;
+  min-width: 50px;
+  flex-shrink: 0;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.sourceit-detail-value {
+  color: #dfe4ea;
+  font-size: 11px;
+}
+
+/* ---- Collapsible comment ---- */
+.sourceit-comment-draft {
+  margin-bottom: 8px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.sourceit-comment-toggle {
+  width: 100%;
+  background: rgba(127,119,221,0.08);
+  border: none;
+  padding: 7px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #AFA9EC;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.sourceit-comment-toggle:hover { background: rgba(127,119,221,0.18); }
+
+.sourceit-comment-toggle span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sourceit-comment-toggle svg { width: 12px; height: 12px; stroke: #AFA9EC; }
+
+.sourceit-toggle-arrow {
+  font-size: 9px;
+  transition: transform 0.25s;
+}
+
+.sourceit-collapsed .sourceit-toggle-arrow { transform: rotate(0deg); }
+.sourceit-comment-draft:not(.sourceit-collapsed) .sourceit-toggle-arrow { transform: rotate(180deg); }
+
+.sourceit-comment-body {
+  padding: 8px 10px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.sourceit-collapsed .sourceit-comment-body { display: none; }
+
+.sourceit-comment-text-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.sourceit-comment-text {
+  font-size: 11px;
+  color: #c8d0da;
+  line-height: 1.5;
+  margin: 0;
+  flex: 1;
+  user-select: all;
+}
+
+.sourceit-btn-copy {
+  background: none;
+  border: none;
+  color: #747d8c;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+.sourceit-btn-copy svg { width: 12px; height: 12px; }
+.sourceit-btn-copy:hover { color: #AFA9EC; background: rgba(127,119,221,0.12); }
+
+.sourceit-comment-actions { margin-top: 8px; }
+
+.sourceit-btn-post-comment {
+  background: rgba(127,119,221,0.15) !important;
+  border-color: rgba(127,119,221,0.35) !important;
+  color: #AFA9EC !important;
+  width: 100%;
+  justify-content: center;
+  padding: 6px 14px !important;
+  font-weight: 600 !important;
+  font-size: 11px !important;
+}
+
+.sourceit-btn-post-comment:hover { background: rgba(127,119,221,0.25) !important; }
+.sourceit-btn-post-comment svg { stroke: #AFA9EC; }
+
+/* ---- Action buttons ---- */
+.sourceit-actions {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.sourceit-btn {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: #a4b0be;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sourceit-btn svg { width: 10px; height: 10px; }
+.sourceit-btn:hover { background: rgba(255,255,255,0.08); color: #dfe4ea; }
+
+.sourceit-btn-confirm {
+  border-color: rgba(46,213,115,0.25);
+  color: #7bed9f;
+  background: rgba(46,213,115,0.08);
+}
+
+.sourceit-btn-confirm:hover { background: rgba(46,213,115,0.15); }
+
+.sourceit-btn-partial {
+  border-color: rgba(255,165,2,0.25);
+  color: #ffbe76;
+  background: rgba(255,165,2,0.08);
+}
+
+.sourceit-btn-partial:hover { background: rgba(255,165,2,0.15); }
+
+.sourceit-btn-false {
+  border-color: rgba(255,255,255,0.08);
+  color: #747d8c;
+}
+
+.sourceit-btn-confirmed {
+  background: rgba(46,213,115,0.15) !important;
+  border-color: rgba(46,213,115,0.3) !important;
+  color: #7bed9f !important;
+  cursor: default;
+}
+
+/* ---- Animations ---- */
+@keyframes sourceit-slideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- Cleared state (AI confirmed legitimate) ---- */
+.sourceit-cleared {
+  transition: opacity 1s ease;
+}
+
+.sourceit-badge-cleared {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-left: 3px solid #2e7d32;
+}
+
+.sourceit-badge-cleared .sourceit-badge-header {
+  border-bottom: none;
+}
+
+.sourceit-icon-cleared {
+  color: #7bed9f;
+}
+
+[data-sourceit-flagged] { position: relative; }
+
+.sourceit-pending-score { animation: sourceit-pulse 1.5s ease-in-out infinite; }
+
+@keyframes sourceit-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}

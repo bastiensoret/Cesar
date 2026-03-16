@@ -1,0 +1,85 @@
+# Changelog
+
+All notable changes to César are documented here.
+
+## [0.5.4] — 2026-03-15
+
+### Fixed
+- All pattern labels translated to English (no more FR/EN mix in badges)
+- Redundant "49% max" badge replaced with simple "no AI" indicator
+- LLM prompt strengthened to avoid false positives on legitimate lead magnets (e.g. personal migration guides)
+
+### Changed
+- Without AI: badge shows "Suspicious — needs AI to confirm" instead of asserting parasitism
+- No-AI notice explains limitation clearly: "Cannot confirm if content is original without AI"
+
+## [0.5.0] — 2026-03-15
+
+### Added
+- **3-layer scoring model**: regex (max 50%) → behavioral (max 75%) → LLM (max 99%)
+- **Layer 2 behavioral signals**: comment bait analysis, public URL detection, author-product mismatch, post structure fingerprint
+- **API-aware thresholds**: 30-49% zone only visible with API key, LLM confirms ambiguous posts
+- **Web search toggle guard**: requires API key, auto-reverts without one
+
+### Changed
+- All UI text switched to English (static elements)
+- LLM output adapts to post language (reason, gated_content, suggested_comment)
+- Detection threshold lowered to 40% for new scoring scale
+- System prompt field renamed from `reason_fr` to `reason`
+
+## [0.4.0] — 2026-03-15
+
+### Added
+- **Multi-LLM support**: Anthropic (Haiku 4.5), OpenAI (GPT-5 mini), Google (Gemini 3 Flash), xAI (Grok 4.1 Fast)
+- **Prompt caching** for Anthropic API (cache_control: ephemeral on system prompt)
+- **Comment pre-fill**: "Comment with source" button opens LinkedIn comment box and injects suggested text
+- **Collapsible comment section**: hidden by default, expands on click
+- **Smart thresholds**: score ≥75 shows badge immediately, 50-74 waits for LLM
+- **Sassy comment generation**: LLM drafts comments with original source + "Detected by César 🏛️" signature
+
+### Changed
+- Popup redesigned: minimal with reveal menu for settings
+- All icons switched from emoji to inline SVG
+- UI sobered up: compact badge with dark blue background
+- Feedback buttons: Confirm / Partial / False positive (replaces old Confirm / Contenu original)
+- Comment button in purple (#AFA9EC), distinct from green confirm
+- Popup header toggle for quick enable/disable
+- Provider auto-detected from API key prefix
+
+## [0.3.0] — 2026-03-15
+
+### Added
+- **LLM verification**: posts flagged by regex are sent to Claude API for semantic analysis
+- Pending badge ("César — Analyzing...") shown while LLM processes
+- LLM returns structured JSON: parasitic (bool), confidence, reason, source, gated_content, suggested_comment
+- Posts cleared by LLM have their badge silently removed
+- API key input in popup with masked display
+
+### Changed
+- Badge shows LLM reasoning instead of raw regex signals when AI is available
+- "Trouver la source" button uses LLM-identified source for smarter search
+
+## [0.2.0] — 2026-03-15
+
+### Added
+- **Two-axis detection model**: third-party attribution + gating CTA (both required)
+- "Give back to César" branding, dark blue UI
+- Auto-expand "voir plus" on truncated posts
+- Re-scan when user manually expands a post (MutationObserver)
+- Debug API via `__cesar.enableDebug()` / `__cesar.test()` / `__cesar.rescan()`
+- Expanded CTA patterns: "Laisser un commentaire", "ceux qui repostent", "1ère relation", etc.
+
+### Changed
+- Detection logic: no longer flags legitimate lead magnets on own content
+- Badge positioned at bottom of post (read first, verdict after)
+- Debug bridge uses MAIN world script injection via manifest (bypasses LinkedIn CSP)
+
+## [0.1.0] — 2026-03-15
+
+### Added
+- Chrome Extension scaffold (Manifest V3)
+- Content script scanning LinkedIn feed posts
+- Basic regex pattern matching (CTA + gate + reform + amplifier categories)
+- Dark overlay badge injection on flagged posts
+- Extension popup with scan stats and toggles
+- MutationObserver + polling for infinite scroll support
