@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>César</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-left">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M9 9h.01M15 9h.01"/>
+      </svg>
+      <span class="logo-text">César</span>
+    </div>
+    <label class="header-toggle" title="Toggle detection">
+      <input type="checkbox" id="toggle-active" checked>
+      <span class="header-toggle-slider"></span>
+    </label>
+  </div>
+
+  <div class="main">
+
+    <div class="parasite-row">
+      <span class="parasite-label">Parasites detected</span>
+      <span class="parasite-value" id="posts-flagged">0</span>
+    </div>
+
+    <div class="web-search-section">
+      <div class="toggle-row">
+        <span class="toggle-label">Web search</span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle-websearch">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="web-search-desc">
+        AI searches for the exact source online to cite in the comment. More accurate, but slower (~2x).
+      </div>
+    </div>
+
+    <button class="reveal-btn" id="reveal-btn">
+      <span>Settings</span>
+      <span class="reveal-arrow">▼</span>
+    </button>
+
+    <div class="reveal-content" id="reveal-content">
+      <div class="reveal-inner">
+
+        <div class="group-label">Provider</div>
+        <select class="provider-select" id="provider-select">
+          <option value="auto">Auto-detect</option>
+          <option value="anthropic">Anthropic — Haiku 4.5</option>
+          <option value="openai">OpenAI — GPT-5 mini</option>
+          <option value="gemini">Google — Gemini 3 Flash</option>
+          <option value="grok">xAI — Grok 4.1 Fast</option>
+        </select>
+
+        <div class="group-label">API key</div>
+        <div class="api-key-row">
+          <input type="password" class="api-key-input" id="api-key-input" placeholder="sk-ant-... / sk-... / AIza...">
+          <button class="api-key-btn" id="api-key-save">OK</button>
+        </div>
+        <div class="api-status" id="api-status">No API key — regex only</div>
+
+        <div class="group-label">Options</div>
+
+        <div class="setting-row">
+          <span class="setting-text">Auto-expand posts</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-expand">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-row">
+          <span class="setting-text">Mode debug</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-debug">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span class="footer-text">Give back to César</span>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

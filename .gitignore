@@ -13,9 +13,11 @@ Thumbs.db
 *.crx
 *.pem
 
-# Node (if added later)
+# Node
 node_modules/
-package-lock.json
+
+# Build output
+dist/
 
 # Local dev
 .env
