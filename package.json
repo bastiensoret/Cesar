@@ -11,7 +11,8 @@
     "format": "prettier --write \"src/**/*.{js,css,html}\"",
     "test": "vitest run",
     "test:watch": "vitest",
-    "ci": "npm run lint && npm run test && npm run build"
+    "ci": "npm run lint && npm run test && npm run build",
+    "package": "node build.js --package"
   },
   "devDependencies": {
     "esbuild": "^0.25.0",

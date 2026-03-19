@@ -1,10 +1,12 @@
 import * as esbuild from 'esbuild';
 import { cpSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { execSync } from 'child_process';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const isWatch = process.argv.includes('--watch');
+const isPackage = process.argv.includes('--package');
 
 const entries = [
   { in: 'src/content/index.js', out: 'dist/content.js' },
@@ -32,12 +34,19 @@ async function build() {
   // Copy static assets
   cpSync('static/icons', 'dist/icons', { recursive: true });
   cpSync('static/overlay.css', 'dist/overlay.css');
-  cpSync('src/debug/debug.js', 'dist/debug.js');
   cpSync('src/popup/popup.html', 'dist/popup.html');
   cpSync('src/popup/popup.css', 'dist/popup.css');
 
-  // Copy manifest.json
-  cpSync('manifest.json', 'dist/manifest.json');
+  // Copy manifest.json, stripping debug content script for production
+  const manifest = JSON.parse(readFileSync('manifest.json', 'utf8'));
+  if (isPackage) {
+    manifest.content_scripts = manifest.content_scripts.filter(
+      (cs) => !cs.js.includes('debug.js'),
+    );
+  } else {
+    cpSync('src/debug/debug.js', 'dist/debug.js');
+  }
+  writeFileSync('dist/manifest.json', JSON.stringify(manifest, null, 2));
 
   console.log('Build complete → dist/');
 }
@@ -64,8 +73,23 @@ async function watch() {
   console.log('Watching for changes...');
 }
 
+async function packageExtension() {
+  await build();
+
+  const manifest = JSON.parse(readFileSync('dist/manifest.json', 'utf8'));
+  const zipName = `cesar-v${manifest.version}.zip`;
+
+  execSync(`cd dist && zip -r ../${zipName} .`);
+  console.log(`Packaged → ${zipName}`);
+}
+
 if (isWatch) {
   watch().catch(console.error);
+} else if (isPackage) {
+  packageExtension().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
 } else {
   build().catch((err) => {
     console.error(err);
