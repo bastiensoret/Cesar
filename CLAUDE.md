@@ -36,6 +36,40 @@ into IIFE format in `dist/`. Static assets and `debug.js` are copied verbatim.
 - Chrome APIs are mocked in `tests/setup.js`
 - Focus testing on regex patterns and detection scoring logic
 
+## Color System (Dark Theme)
+All colors are managed via CSS custom properties in `popup.css` (prefix `--color-`) and `overlay.css` (prefix `--si-`).
+
+### Backgrounds
+- `#0c0c18` — darkest (popup body)
+- `#13132a` — cards/panels (popup header)
+- `#1a1a2e` → `#16213e` — overlay gradient
+
+### Text
+- `#e8e8ee` — primary
+- `#c0c0d0` — secondary
+- `#d0d0e0` — heading (popup logo, count)
+- `#9a9ab0` — muted (labels, descriptions)
+- `#606078` — tertiary (group labels)
+
+### Accents
+- `#7bc47b` — green (toggle on, success)
+- `#7bed9f` — bright green (overlay confirm, AI badge, copy success)
+- `#ff4757` — red (high severity border)
+- `#ff6b81` — soft red (high severity text, icon)
+- `#ff8a9c` — soft red (popup error text)
+- `#ffa502` — orange (medium severity border, warning)
+- `#ffbe76` — soft orange (medium severity text)
+- `#3742fa` — blue (low severity border)
+- `#AFA9EC` — purple (comment section accent)
+- `#2e7d32` — dark green (cleared overlay border)
+
+### Overlay utility
+- `#747d8c` — muted (dismiss, detail labels)
+- `#a4b0be` — subdued (analyzing text, base button)
+
+### Borders
+- `rgba(255,255,255,0.04)` to `rgba(255,255,255,0.1)` — subtle to strong
+
 ## Style
 - ESLint + Prettier enforced
 - Single quotes, trailing commas, 100 char width

@@ -6,6 +6,7 @@ import { escapeHTML } from '../../shared/sanitize.js';
 const POST_CONTENT_SEL = '.feed-shared-update-v2__content';
 
 const SEVERITY_LABELS = { high: 'HIGH', medium: 'MED', low: 'LOW' };
+const SEVERITY_ARIA = { high: 'High severity', medium: 'Medium severity', low: 'Low severity' };
 
 export class OverlayManager {
   /** Remove existing overlays and their event listeners */
@@ -22,6 +23,7 @@ export class OverlayManager {
 
     const overlay = document.createElement('div');
     overlay.className = 'sourceit-overlay sourceit-severity-medium';
+    overlay.setAttribute('aria-label', 'César — analyzing post');
     const ac = new AbortController();
     overlay._abortController = ac;
 
@@ -62,6 +64,7 @@ export class OverlayManager {
 
     const overlay = document.createElement('div');
     overlay.className = 'sourceit-overlay sourceit-cleared';
+    overlay.setAttribute('aria-label', 'César — post cleared');
     const ac = new AbortController();
     overlay._abortController = ac;
 
@@ -111,6 +114,7 @@ export class OverlayManager {
     const severity = confidence >= 70 ? 'high' : confidence >= 50 ? 'medium' : 'low';
     overlay.classList.add(`sourceit-severity-${severity}`);
     overlay.setAttribute('data-score', confidence);
+    overlay.setAttribute('aria-label', `César — ${SEVERITY_ARIA[severity]} detection, ${confidence}%`);
 
     const tpMatch = regexResult.matches.find((m) => m.axis === 'third-party');
     const ctaMatch = regexResult.matches.find((m) => m.axis === 'gating');
@@ -138,14 +142,14 @@ export class OverlayManager {
         </div>
         ${suggestedComment ? `
         <div class="sourceit-comment-draft sourceit-collapsed">
-          <button class="sourceit-comment-toggle">
+          <button class="sourceit-comment-toggle" aria-expanded="false">
             <span>${ICONS.comment} Comment with source</span>
-            <span class="sourceit-toggle-arrow"><svg viewBox="0 0 10 6" width="10" height="6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="sourceit-toggle-arrow">${ICONS.chevron}</span>
           </button>
           <div class="sourceit-comment-body">
             <div class="sourceit-comment-text-row">
               <p class="sourceit-comment-text">${suggestedComment}</p>
-              <button class="sourceit-btn-copy" title="Copy">${ICONS.copy}</button>
+              <button class="sourceit-btn-copy" title="Copy" aria-label="Copy comment">${ICONS.copy}</button>
             </div>
             <button class="sourceit-btn sourceit-btn-post-comment">${ICONS.comment} Post comment</button>
           </div>
@@ -247,7 +251,8 @@ export class OverlayManager {
         (e) => {
           e.stopPropagation();
           const draft = overlay.querySelector('.sourceit-comment-draft');
-          draft.classList.toggle('sourceit-collapsed');
+          const isCollapsed = draft.classList.toggle('sourceit-collapsed');
+          commentToggle.setAttribute('aria-expanded', String(!isCollapsed));
         },
         opts
       );

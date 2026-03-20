@@ -2,6 +2,16 @@
 
 All notable changes to César are documented here.
 
+## [0.7.1] — 2026-03-20
+
+### Changed
+- All hardcoded color values migrated to CSS custom properties (`--color-*` in popup, `--si-*` in overlay) for maintainability
+- Decorative SVGs marked with `aria-hidden="true"`; toggle elements use `role="switch"`
+- Overlay root element receives `aria-label`; comment toggle uses `aria-expanded`
+- Comment body animates with `max-height` transition instead of `display:none` toggle
+- `postsFlagged` display sanitized; inline style manipulation replaced with CSS classes
+- Icon paths in manifest updated to `static/` directory
+
 ## [0.7.0] — 2026-03-20
 
 ### Added
@@ -48,6 +58,20 @@ All notable changes to César are documented here.
 - Popup fetches provider names from background instead of hardcoded map
 - Feed scanner replaced `setInterval` polling with MutationObserver-only + debounce
 - Unused imports removed from `build.js`
+- All hardcoded colors migrated to CSS custom properties (`--color-*` in popup, `--si-*` in overlay)
+- SVG icons annotated with `aria-hidden="true"` for screen readers
+- Popup toggles use `role="switch"` for correct ARIA semantics
+- Toggle wrappers changed from `<span>` to `<label>` for proper form association
+- Overlay `aria-label` set per state (analyzing, cleared, severity + confidence)
+- Comment toggle tracks `aria-expanded` state
+- Comment body animates via `max-height` transition instead of `display: none`
+- New `chevron` icon in icon set; inline arrow SVGs replaced with shared icon
+- Popup logo updated to shield-with-checkmark design
+- `postsFlagged` display sanitized with `Number() || 0` to prevent `undefined`
+- Popup save button feedback uses CSS class instead of inline `style.color`
+- Removed unused `.sourceit-explanation` and `.sourceit-reason-cleared` CSS rules
+- Overlay `will-change` removed (was causing unnecessary compositing layers)
+- Color System section added to CLAUDE.md
 
 ## [0.5.4] — 2026-03-15
 
