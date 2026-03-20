@@ -8,7 +8,7 @@ import { escapeHTML } from '../../shared/sanitize.js';
  */
 export async function prefillComment(postElement, text, btn) {
   const originalHTML = btn.innerHTML;
-  btn.innerHTML = `${ICONS.loader} Opening...`;
+  btn.innerHTML = `<span class="sourceit-icon-spin">${ICONS.loader}</span> Opening...`;
 
   try {
     // Step 1: Find and click LinkedIn's "Comment" button to open the comment box
@@ -34,10 +34,7 @@ export async function prefillComment(postElement, text, btn) {
       linkedinCommentBtn.click();
     }
 
-    // Step 2: Wait for the comment editor to appear
-    await new Promise((resolve) => setTimeout(resolve, 500));
-
-    // Step 3: Find the comment input (contenteditable div)
+    // Step 2: Poll for the comment editor to appear (up to 2s)
     const editorSelectors = [
       '.ql-editor[data-placeholder]',
       '.ql-editor',
@@ -47,17 +44,18 @@ export async function prefillComment(postElement, text, btn) {
     ];
 
     let editor = null;
-    for (const sel of editorSelectors) {
-      editor = postElement.querySelector(sel);
-      if (editor) break;
-    }
-
-    // Broader search if not found within post
-    if (!editor) {
+    for (let attempt = 0; attempt < 10 && !editor; attempt++) {
+      await new Promise((resolve) => setTimeout(resolve, 200));
       for (const sel of editorSelectors) {
-        const candidates = document.querySelectorAll(sel);
-        for (const c of candidates) {
-          if (c.offsetParent !== null) editor = c;
+        editor = postElement.querySelector(sel);
+        if (editor) break;
+      }
+      // Broader search — scoped to the same post ancestor to avoid injecting into wrong post
+      if (!editor) {
+        const postAncestor = postElement.closest('.feed-shared-update-v2') || postElement;
+        for (const sel of editorSelectors) {
+          editor = postAncestor.querySelector(sel);
+          if (editor) break;
         }
       }
     }
@@ -72,14 +70,12 @@ export async function prefillComment(postElement, text, btn) {
       editor.dispatchEvent(new Event('change', { bubbles: true }));
 
       btn.innerHTML = `${ICONS.check} Ready — review and post`;
-      btn.style.color = '#2e7d32';
-      btn.style.borderColor = '#c8e6c9';
+      btn.classList.add('sourceit-btn-post-success');
     } else {
       // Fallback: copy to clipboard
       await navigator.clipboard.writeText(text);
       btn.innerHTML = `${ICONS.copy} Copied — paste in comment`;
-      btn.style.color = '#e65100';
-      btn.style.borderColor = '#ffe0b2';
+      btn.classList.add('sourceit-btn-post-fallback');
     }
   } catch (_err) {
     // Ultimate fallback
@@ -94,7 +90,6 @@ export async function prefillComment(postElement, text, btn) {
   // Reset button after 5s
   setTimeout(() => {
     btn.innerHTML = originalHTML;
-    btn.style.color = '';
-    btn.style.borderColor = '';
+    btn.classList.remove('sourceit-btn-post-success', 'sourceit-btn-post-fallback');
   }, 5000);
 }

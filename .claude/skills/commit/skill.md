@@ -1,6 +1,6 @@
 ---
 name: "commit"
-description: "Safe commit with pre-audit. Use /commit instead of git commit directly. Scans staged changes for César-specific violations, runs the verification loop (test → lint), then creates a properly formatted commit."
+description: "Safe commit with pre-audit. Use /commit instead of git commit directly. Scans staged changes for César-specific violations, runs the verification loop (test → lint), updates docs (CHANGELOG, ROADMAP, README, CLAUDE.md), then creates a properly formatted commit."
 user_invocable: true
 ---
 
@@ -115,6 +115,8 @@ If permissions were added, ask the user to confirm they are necessary — Chrome
 
 **If `--fast` was passed**: skip this step entirely and go to Step 5.
 
+> Note: `--fast` skips tests/lint only — Step 5 (doc sync) is never skipped.
+
 Run these in order. Stop immediately if any fails.
 
 ```sh
@@ -129,7 +131,20 @@ If any command fails, show the error output and stop. Fix the issue before commi
 
 ---
 
-## Step 5 — Create the commit
+## Step 5 — Update documentation and roadmap
+
+Before committing, check whether the staged changes affect anything documented in the project's markdown files. Review and update as needed:
+
+1. **CHANGELOG.md** — Add an entry under the current version section (or create a new `[Unreleased]` section) describing what changed. Follow the existing Keep a Changelog format (Added / Fixed / Changed / Removed).
+2. **ROADMAP.md** — If the commit ships, progresses, or completes a roadmap item, update its status (e.g., 📋 → 🔨 or 🔨 → ✅). If the commit introduces a new planned feature not yet on the roadmap, add it.
+3. **README.md** — If the commit changes user-facing behavior, UI, supported LLMs, or anything mentioned in the README, update the relevant section.
+4. **CLAUDE.md** — If the commit changes architecture, build setup, key constraints, or commands, update the dev guide.
+
+Only touch files that actually need updating — don't add noise. Stage the updated docs together with the code changes.
+
+---
+
+## Step 6 — Create the commit
 
 Stage specific files (never `git add -A` or `git add .`):
 
