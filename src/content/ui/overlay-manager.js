@@ -44,7 +44,7 @@ export class OverlayManager {
     const overlay = document.createElement('div');
     overlay.className = 'sourceit-overlay sourceit-cleared';
 
-    const reason = escapeHTML(llmResult.reason || llmResult.reason_fr || 'Original content');
+    const reason = escapeHTML(llmResult.reason || 'Original content');
 
     overlay.innerHTML = `
       <div class="sourceit-badge sourceit-badge-cleared">
@@ -135,7 +135,7 @@ export class OverlayManager {
     }
 
     const rawReason = isLLM
-      ? escapeHTML(llmResult.reason || llmResult.reason_fr || '')
+      ? escapeHTML(llmResult.reason || '')
       : 'Suspicious — needs AI to confirm';
 
     overlay.innerHTML = `

@@ -1,16 +1,9 @@
 /**
- * César v0.6 — Popup Script
+ * César v0.7 — Popup Script
  * Minimal UI: parasite count, web search toggle, reveal menu for settings.
  */
 
 import { getStorage, setStorage } from '../shared/storage.js';
-
-const PROVIDER_NAMES = {
-  anthropic: 'Anthropic — Haiku 4.5',
-  openai: 'OpenAI — GPT-5 mini',
-  gemini: 'Google — Gemini 3 Flash',
-  grok: 'xAI — Grok 4.1 Fast',
-};
 
 function autoDetect(key) {
   if (key.startsWith('sk-ant-')) return 'anthropic';
@@ -24,14 +17,19 @@ function updateApiStatus(key, providerSetting) {
   const status = document.getElementById('api-status');
   const provider =
     !providerSetting || providerSetting === 'auto' ? autoDetect(key) : providerSetting;
-  const name = PROVIDER_NAMES[provider];
-  if (name) {
-    status.innerHTML = `<span style="color:#7bed9f">●</span> ${name}`;
-    status.style.color = '#7bed9f';
-  } else {
-    status.textContent = 'Unknown provider';
-    status.style.color = '#ff6b81';
-  }
+
+  // Fetch provider names from background to avoid duplication
+  chrome.runtime.sendMessage({ type: 'cesar-get-providers' }, (resp) => {
+    if (chrome.runtime.lastError || !resp) return;
+    const match = resp.providers.find((p) => p.id === provider);
+    if (match) {
+      status.innerHTML = `<span style="color:#7bed9f">●</span> ${match.name} — ${match.model}`;
+      status.style.color = '#7bed9f';
+    } else {
+      status.textContent = 'Unknown provider';
+      status.style.color = '#ff6b81';
+    }
+  });
 }
 
 async function updateSetting(key, value) {
@@ -158,11 +156,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (e.key === 'Enter') saveApiKey();
   });
 
-  // Auto-refresh parasite count
-  setInterval(async () => {
-    const statsData = await getStorage(['cesar_stats']);
-    if (statsData.cesar_stats) {
-      document.getElementById('posts-flagged').textContent = statsData.cesar_stats.postsFlagged;
+  // Update parasite count reactively via storage change events
+  chrome.storage.onChanged.addListener((changes) => {
+    if (changes.cesar_stats) {
+      const newStats = changes.cesar_stats.newValue;
+      if (newStats) {
+        document.getElementById('posts-flagged').textContent = newStats.postsFlagged;
+      }
     }
-  }, 2000);
+  });
 });

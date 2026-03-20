@@ -26,7 +26,7 @@ export async function callAnthropic(apiKey, model, userMessage) {
     }),
   });
 
-  if (!response.ok) return handleAPIError(response);
+  if (!response.ok) await handleAPIError(response);
 
   const result = await response.json();
 

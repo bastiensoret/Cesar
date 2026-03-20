@@ -204,6 +204,16 @@ function checkAuthorMismatch(text, authorInfo) {
     { regex: /\bStripe\b/i, keywords: ['stripe'] },
     { regex: /\bVercel\b/i, keywords: ['vercel'] },
     { regex: /\bSupabase\b/i, keywords: ['supabase'] },
+    { regex: /\bSlack\b/i, keywords: ['slack'] },
+    { regex: /\bDiscord\b/i, keywords: ['discord'] },
+    { regex: /\bGitHub\b/i, keywords: ['github'] },
+    { regex: /\bHubSpot\b/i, keywords: ['hubspot'] },
+    { regex: /\bSalesforce\b/i, keywords: ['salesforce'] },
+    { regex: /\bAdobe\b/i, keywords: ['adobe'] },
+    { regex: /\bAmazon\b/i, keywords: ['amazon', 'aws'] },
+    { regex: /\bApple\b/i, keywords: ['apple'] },
+    { regex: /\bCanva\b/i, keywords: ['canva'] },
+    { regex: /\bAirtable\b/i, keywords: ['airtable'] },
   ];
 
   let mismatchFound = false;

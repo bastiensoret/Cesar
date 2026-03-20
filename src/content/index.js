@@ -1,5 +1,5 @@
 /**
- * César v0.6 — Content Script Entry Point
+ * César v0.7 — Content Script Entry Point
  *
  * Rend à César ce qui appartient à César.
  * Detects posts that gate access to content created by someone else.

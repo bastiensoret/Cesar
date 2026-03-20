@@ -16,7 +16,7 @@ export async function callGemini(apiKey, model, userMessage) {
     }),
   });
 
-  if (!response.ok) return handleAPIError(response);
+  if (!response.ok) await handleAPIError(response);
 
   const result = await response.json();
   const text = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
