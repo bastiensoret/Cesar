@@ -22,12 +22,13 @@ function updateApiStatus(key, providerSetting) {
   chrome.runtime.sendMessage({ type: 'cesar-get-providers' }, (resp) => {
     if (chrome.runtime.lastError || !resp) return;
     const match = resp.providers.find((p) => p.id === provider);
+    status.classList.remove('api-status-success', 'api-status-error');
     if (match) {
-      status.innerHTML = `<span style="color:#7bed9f">●</span> ${match.name} — ${match.model}`;
-      status.style.color = '#7bed9f';
+      status.textContent = `● ${match.name} — ${match.model}`;
+      status.classList.add('api-status-success');
     } else {
       status.textContent = 'Unknown provider';
-      status.style.color = '#ff6b81';
+      status.classList.add('api-status-error');
     }
   });
 }
@@ -49,8 +50,10 @@ async function saveApiKey() {
   const effective = providerSelect !== 'auto' ? providerSelect : detected;
 
   if (!effective) {
-    document.getElementById('api-status').textContent = 'Unknown key — select a provider manually';
-    document.getElementById('api-status').style.color = '#ff6b81';
+    const statusEl = document.getElementById('api-status');
+    statusEl.textContent = 'Unknown key — select a provider manually';
+    statusEl.classList.remove('api-status-success');
+    statusEl.classList.add('api-status-error');
     return;
   }
 
@@ -58,6 +61,16 @@ async function saveApiKey() {
   input.value = key.substring(0, 10) + '...' + key.substring(key.length - 4);
   document.getElementById('provider-select').value = effective;
   updateApiStatus(key, effective);
+
+  // Brief save confirmation on the button
+  const saveBtn = document.getElementById('api-key-save');
+  const origText = saveBtn.textContent;
+  saveBtn.textContent = 'Saved';
+  saveBtn.style.color = '#7bed9f';
+  setTimeout(() => {
+    saveBtn.textContent = origText;
+    saveBtn.style.color = '';
+  }, 1500);
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -98,11 +111,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('reveal-btn').addEventListener('click', () => {
     const btn = document.getElementById('reveal-btn');
     const content = document.getElementById('reveal-content');
-    btn.classList.toggle('open');
-    content.classList.toggle('open');
+    const isOpen = content.classList.toggle('open');
+    btn.classList.toggle('open', isOpen);
+    btn.setAttribute('aria-expanded', String(isOpen));
   });
 
   // Web search toggle — requires API key
+  let webSearchErrorTimer = null;
   document.getElementById('toggle-websearch').addEventListener('change', async (e) => {
     if (e.target.checked) {
       const keyData = await getStorage(['cesar_api_key']);
@@ -110,17 +125,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         e.target.checked = false;
         const desc = document.querySelector('.web-search-desc');
         const originalText = desc.textContent;
+        if (webSearchErrorTimer) clearTimeout(webSearchErrorTimer);
         desc.textContent = 'An API key is required for web search. Add one in Settings below.';
-        desc.style.color = '#ff6b81';
-        setTimeout(() => {
+        desc.classList.add('web-search-desc-error');
+        webSearchErrorTimer = setTimeout(() => {
           desc.textContent = originalText;
-          desc.style.color = '';
+          desc.classList.remove('web-search-desc-error');
+          webSearchErrorTimer = null;
         }, 3000);
         // Open settings panel
         const revealBtn = document.getElementById('reveal-btn');
         const revealContent = document.getElementById('reveal-content');
         if (!revealContent.classList.contains('open')) {
           revealBtn.classList.add('open');
+          revealBtn.setAttribute('aria-expanded', 'true');
           revealContent.classList.add('open');
         }
       } else {

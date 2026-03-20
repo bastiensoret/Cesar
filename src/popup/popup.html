@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +16,7 @@
       <span class="logo-text">César</span>
     </div>
     <label class="header-toggle" title="Toggle detection">
-      <input type="checkbox" id="toggle-active" checked>
+      <input type="checkbox" id="toggle-active" checked aria-label="Toggle César detection">
       <span class="header-toggle-slider"></span>
     </label>
   </div>
@@ -32,7 +32,7 @@
       <div class="toggle-row">
         <span class="toggle-label">Web search</span>
         <label class="toggle">
-          <input type="checkbox" id="toggle-websearch">
+          <input type="checkbox" id="toggle-websearch" aria-label="Enable web search">
           <span class="toggle-slider"></span>
         </label>
       </div>
@@ -41,16 +41,16 @@
       </div>
     </div>
 
-    <button class="reveal-btn" id="reveal-btn">
+    <button class="reveal-btn" id="reveal-btn" aria-expanded="false" aria-controls="reveal-content">
       <span>Settings</span>
-      <span class="reveal-arrow">▼</span>
+      <span class="reveal-arrow"><svg viewBox="0 0 10 6" width="10" height="6" fill="none"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     </button>
 
     <div class="reveal-content" id="reveal-content">
       <div class="reveal-inner">
 
-        <div class="group-label">Provider</div>
-        <select class="provider-select" id="provider-select">
+        <label class="group-label" for="provider-select">Provider</label>
+        <select class="provider-select" id="provider-select" aria-label="LLM provider">
           <option value="auto">Auto-detect</option>
           <option value="anthropic">Anthropic — Haiku 4.5</option>
           <option value="openai">OpenAI — GPT-5 mini</option>
@@ -58,29 +58,29 @@
           <option value="grok">xAI — Grok 4.1 Fast</option>
         </select>
 
-        <div class="group-label">API key</div>
+        <label class="group-label" for="api-key-input">API key</label>
         <div class="api-key-row">
-          <input type="password" class="api-key-input" id="api-key-input" placeholder="sk-ant-... / sk-... / AIza...">
-          <button class="api-key-btn" id="api-key-save">OK</button>
+          <input type="password" class="api-key-input" id="api-key-input" placeholder="Paste your API key" aria-label="API key">
+          <button class="api-key-btn" id="api-key-save" aria-label="Save API key">OK</button>
         </div>
         <div class="api-status" id="api-status">No API key — regex only</div>
 
-        <div class="group-label">Options</div>
+        <span class="group-label" role="heading" aria-level="3">Options</span>
 
         <div class="setting-row">
-          <span class="setting-text">Auto-expand posts</span>
-          <label class="toggle">
-            <input type="checkbox" id="toggle-expand">
+          <label class="setting-text" for="toggle-expand">Auto-expand posts</label>
+          <span class="toggle">
+            <input type="checkbox" id="toggle-expand" aria-label="Auto-expand flagged posts">
             <span class="toggle-slider"></span>
-          </label>
+          </span>
         </div>
 
         <div class="setting-row">
-          <span class="setting-text">Mode debug</span>
-          <label class="toggle">
-            <input type="checkbox" id="toggle-debug">
+          <label class="setting-text" for="toggle-debug">Mode debug</label>
+          <span class="toggle">
+            <input type="checkbox" id="toggle-debug" aria-label="Debug mode">
             <span class="toggle-slider"></span>
-          </label>
+          </span>
         </div>
 
       </div>
