@@ -20,7 +20,7 @@ export async function callOpenAICompat(apiKey, model, endpoint, userMessage) {
     }),
   });
 
-  if (!response.ok) return handleAPIError(response);
+  if (!response.ok) await handleAPIError(response);
 
   const result = await response.json();
   const text = result.choices?.[0]?.message?.content || '';

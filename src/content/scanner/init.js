@@ -1,6 +1,7 @@
 import { CONFIG } from '../config.js';
 import { FeedScanner } from './feed-scanner.js';
-import { analyzeLayer1 } from '../engine/layer1.js';
+import { analyzeLayer1, normalizeL1Score } from '../engine/layer1.js';
+import { getStorage } from '../../shared/storage.js';
 
 function waitForFeed(cb, maxAttempts = 20) {
   let attempts = 0;
@@ -18,6 +19,12 @@ function waitForFeed(cb, maxAttempts = 20) {
 }
 
 export function init() {
+  // Load debug setting from storage
+  getStorage(['cesar_settings']).then((data) => {
+    const settings = data.cesar_settings || {};
+    if (settings.debug) CONFIG.DEBUG = true;
+  }).catch(() => {});
+
   waitForFeed(() => {
     const scanner = new FeedScanner();
     scanner.start();
@@ -40,10 +47,7 @@ export function init() {
           console.log('[César] Re-scan triggered');
         } else if (data.cmd === 'test') {
           const l1 = analyzeLayer1(data.text);
-          const l1Score = Math.min(
-            Math.round(((Math.min(l1.rawTP, 100) + Math.min(l1.rawCTA, 100)) / 2) * 0.5),
-            CONFIG.L1_MAX_SCORE
-          );
+          const l1Score = normalizeL1Score(l1.rawTP, l1.rawCTA, CONFIG.L1_MAX_SCORE);
           console.table(
             l1.matches.map((m) => ({ axis: m.axis, signal: m.label, score: m.score }))
           );

@@ -1,12 +1,15 @@
 /**
- * César v0.6 — Background Service Worker
+ * César v0.7 — Background Service Worker
  * Multi-LLM support with prompt caching and comment drafting.
  */
 
 import { PROVIDERS, autoDetectProvider } from './providers.js';
 import { verifyPost } from './verify.js';
 
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  // Only accept messages from our own extension
+  if (sender.id !== chrome.runtime.id) return;
+
   if (message.type === 'cesar-verify') {
     verifyPost(message.postText, message.authorName)
       .then((result) => sendResponse({ success: true, result }))

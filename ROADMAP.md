@@ -115,9 +115,11 @@ This roadmap collects all ideas discussed during the initial build sessions and 
 
 ## Distribution & growth
 
-### 📋 Planned
+### ✅ Shipped
 - GitHub repository (public, open source)
-- Chrome Web Store publication ($5 dev account, privacy policy, screenshots)
+- Chrome Web Store publication (privacy policy, store listing, packaged build)
+
+### 📋 Planned
 - LinkedIn announcement post (the growth loop)
 - Landing page explaining the project
 

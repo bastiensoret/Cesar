@@ -1,10 +1,6 @@
 import * as esbuild from 'esbuild';
 import { cpSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
-import { execSync } from 'child_process';
-import { resolve, dirname } from 'path';
-import { fileURLToPath } from 'url';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const isWatch = process.argv.includes('--watch');
 const isPackage = process.argv.includes('--package');
 
@@ -19,16 +15,24 @@ async function build() {
 
   // Bundle JS entry points as IIFE (Chrome extension content scripts require this)
   for (const entry of entries) {
-    await esbuild.build({
+    const result = await esbuild.build({
       entryPoints: [entry.in],
       bundle: true,
       format: 'iife',
       outfile: entry.out,
-      minify: false,
-      sourcemap: false,
+      minify: !isWatch,
+      sourcemap: isWatch ? 'inline' : false,
       target: 'chrome120',
       logLevel: 'info',
+      metafile: true,
     });
+
+    // Report bundle sizes
+    if (result.metafile) {
+      for (const [name, info] of Object.entries(result.metafile.outputs)) {
+        console.log(`  ${name}: ${(info.bytes / 1024).toFixed(1)} KB`);
+      }
+    }
   }
 
   // Copy static assets
@@ -63,7 +67,7 @@ async function watch() {
       format: 'iife',
       outfile: entry.out,
       minify: false,
-      sourcemap: false,
+      sourcemap: 'inline',
       target: 'chrome120',
       logLevel: 'info',
     });
@@ -79,7 +83,15 @@ async function packageExtension() {
   const manifest = JSON.parse(readFileSync('dist/manifest.json', 'utf8'));
   const zipName = `cesar-v${manifest.version}.zip`;
 
-  execSync(`cd dist && zip -r ../${zipName} .`);
+  // Cross-platform zip: use PowerShell on Windows, zip on Unix
+  const { execSync } = await import('child_process');
+  if (process.platform === 'win32') {
+    execSync(
+      `powershell -Command "Compress-Archive -Path 'dist\\*' -DestinationPath '${zipName}' -Force"`
+    );
+  } else {
+    execSync(`cd dist && zip -r ../${zipName} .`);
+  }
   console.log(`Packaged → ${zipName}`);
 }
 

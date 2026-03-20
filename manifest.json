@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "César — Give back to César",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Detects parasitic lead magnets on LinkedIn — posts that gate access to content the author didn't create.",
   "permissions": ["storage", "activeTab"],
   "host_permissions": [
@@ -40,5 +40,8 @@
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
   }
 }

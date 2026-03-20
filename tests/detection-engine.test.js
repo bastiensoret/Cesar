@@ -72,7 +72,7 @@ describe('DetectionEngine', () => {
     });
     expect(result.score).toBe(0);
     expect(result.flagged).toBe(false);
-    expect(result.reason).toContain('not parasitic');
+    expect(result.reason).toBe('Gating on own content — not parasitic');
   });
 
   it('caps L1 score at 50', () => {

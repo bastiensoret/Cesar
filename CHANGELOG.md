@@ -2,6 +2,35 @@
 
 All notable changes to César are documented here.
 
+## [0.7.0] — 2026-03-20
+
+### Added
+- LLM concurrency queue: max 3 parallel LLM calls, prevents API flooding
+- Debounced feed scanning (500ms) replaces polling interval — less CPU, fewer duplicate scans
+- Reactive popup stats via `chrome.storage.onChanged` (replaces 2s polling)
+- Layer 2 author-mismatch: 10 new brands (Slack, Discord, GitHub, HubSpot, Salesforce, Adobe, Amazon, Apple, Canva, Airtable)
+- Debug mode now loadable from storage settings at init
+- `normalizeL1Score` extracted as reusable function from detection engine
+- Bundle size reporting in build output (metafile)
+
+### Fixed
+- `escapeHTML` rewritten as pure string replacement — works in service workers (no `document` dependency)
+- `chrome.storage` wrappers now properly reject on `runtime.lastError`
+- LLM error handlers use `await` instead of `return` (errors were silently swallowed)
+- DOM extractor deduplicates nested elements — no more double-counted post text
+- Background message listener validates `sender.id` (ignores external messages)
+- Removed stale `reason_fr` fallbacks from overlay manager and feed scanner
+
+### Changed
+- Data attributes renamed from `data-sourceit-*` to `data-cesar-*`
+- Debug mode off by default in production (`CONFIG.DEBUG = false`)
+- Third-party regex patterns use Unicode-aware `\p{L}` for accented characters
+- Build: production bundles are minified; dev builds get inline sourcemaps
+- Packaging: cross-platform zip (PowerShell on Windows, zip on Unix)
+- Popup fetches provider names from background instead of hardcoded map
+- Feed scanner replaced `setInterval` polling with MutationObserver-only + debounce
+- Unused imports removed from `build.js`
+
 ## [0.5.4] — 2026-03-15
 
 ### Fixed

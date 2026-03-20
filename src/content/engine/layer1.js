@@ -48,3 +48,11 @@ export function analyzeLayer1(text) {
     matches,
   };
 }
+
+/**
+ * Normalize raw L1 scores to 0-50 range.
+ */
+export function normalizeL1Score(rawTP, rawCTA, maxScore) {
+  const raw = Math.round((Math.min(rawTP, 100) + Math.min(rawCTA, 100)) / 2);
+  return Math.min(Math.round(raw * 0.5), maxScore);
+}

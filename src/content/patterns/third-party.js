@@ -2,14 +2,14 @@ export const THIRD_PARTY_PATTERNS = [
   {
     id: 'tp_launched_fr',
     regex:
-      /([\w\s]{2,30})\s+(vient de|viennent de)\s+(sortir|lancer|publier|créer|dévoiler|annoncer|release)/gi,
+      /([\p{L}\w\s]{2,30})\s+(vient de|viennent de)\s+(sortir|lancer|publier|créer|dévoiler|annoncer|release)/giu,
     label: 'Third-party launch mentioned',
     weight: 35,
   },
   {
     id: 'tp_has_created_fr',
     regex:
-      /([\w\s]{2,20})\s+(a créé|a sorti|a lancé|a développé|a publié|a release|a déployé|a open.?sourcé)/gi,
+      /([\p{L}\w\s]{2,20})\s+(a créé|a sorti|a lancé|a développé|a publié|a release|a déployé|a open.?sourcé)/giu,
     label: 'Third-party creation mentioned',
     weight: 35,
   },
@@ -30,14 +30,14 @@ export const THIRD_PARTY_PATTERNS = [
   {
     id: 'tp_launched_en',
     regex:
-      /([\w\s]{2,30})\s+(just launched|just released|just dropped|just announced|just shipped|just open.?sourced)/gi,
+      /([\p{L}\w\s]{2,30})\s+(just launched|just released|just dropped|just announced|just shipped|just open.?sourced)/giu,
     label: 'References a third-party launch',
     weight: 35,
   },
   {
     id: 'tp_has_created_en',
     regex:
-      /([\w\s]{2,20})\s+(created|built|released|launched|published|shipped|open.?sourced)\s+(a |an |the |this )/gi,
+      /([\p{L}\w\s]{2,20})\s+(created|built|released|launched|published|shipped|open.?sourced)\s+(a |an |the |this )/giu,
     label: "References someone else's creation",
     weight: 35,
   },

@@ -1,5 +1,5 @@
 import { CONFIG } from '../config.js';
-import { analyzeLayer1 } from './layer1.js';
+import { analyzeLayer1, normalizeL1Score } from './layer1.js';
 import { analyzeLayer2 } from './layer2.js';
 import { extractPostText, extractAuthorInfo } from './dom-extractors.js';
 import { setStorage } from '../../shared/storage.js';
@@ -53,8 +53,7 @@ export class DetectionEngine {
     }
 
     // Normalize L1 to 0-50 range
-    const l1Raw = Math.round((Math.min(l1.rawTP, 100) + Math.min(l1.rawCTA, 100)) / 2);
-    const l1Score = Math.min(Math.round(l1Raw * 0.5), CONFIG.L1_MAX_SCORE);
+    const l1Score = normalizeL1Score(l1.rawTP, l1.rawCTA, CONFIG.L1_MAX_SCORE);
 
     // LAYER 2: Behavioral signals (max +25, total max 75%)
     const l2 = analyzeLayer2(postElement, text, authorInfo);
