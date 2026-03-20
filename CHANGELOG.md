@@ -2,6 +2,16 @@
 
 All notable changes to César are documented here.
 
+## [0.7.1] — 2026-03-20
+
+### Changed
+- All hardcoded color values migrated to CSS custom properties (`--color-*` in popup, `--si-*` in overlay) for maintainability
+- Decorative SVGs marked with `aria-hidden="true"`; toggle elements use `role="switch"`
+- Overlay root element receives `aria-label`; comment toggle uses `aria-expanded`
+- Comment body animates with `max-height` transition instead of `display:none` toggle
+- `postsFlagged` display sanitized; inline style manipulation replaced with CSS classes
+- Icon paths in manifest updated to `static/` directory
+
 ## [0.7.0] — 2026-03-20
 
 ### Added
