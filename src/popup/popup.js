@@ -22,7 +22,7 @@ function updateApiStatus(key, providerSetting) {
   chrome.runtime.sendMessage({ type: 'cesar-get-providers' }, (resp) => {
     if (chrome.runtime.lastError || !resp) return;
     const match = resp.providers.find((p) => p.id === provider);
-    status.classList.remove('api-status-success', 'api-status-error');
+    status.classList.remove('api-status-success', 'api-status-error', 'api-status-warning');
     if (match) {
       status.textContent = `● ${match.name} — ${match.model}`;
       status.classList.add('api-status-success');
@@ -66,10 +66,10 @@ async function saveApiKey() {
   const saveBtn = document.getElementById('api-key-save');
   const origText = saveBtn.textContent;
   saveBtn.textContent = 'Saved';
-  saveBtn.style.color = '#7bed9f';
+  saveBtn.classList.add('api-key-btn-saved');
   setTimeout(() => {
     saveBtn.textContent = origText;
-    saveBtn.style.color = '';
+    saveBtn.classList.remove('api-key-btn-saved');
   }, 1500);
 }
 
@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     webSearch: false,
   };
 
-  document.getElementById('posts-flagged').textContent = stats.postsFlagged;
+  document.getElementById('posts-flagged').textContent = Number(stats.postsFlagged) || 0;
 
   document.getElementById('toggle-active').checked = settings.active;
   document.getElementById('toggle-debug').checked = settings.debug;
@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (changes.cesar_stats) {
       const newStats = changes.cesar_stats.newValue;
       if (newStats) {
-        document.getElementById('posts-flagged').textContent = newStats.postsFlagged;
+        document.getElementById('posts-flagged').textContent = Number(newStats.postsFlagged) || 0;
       }
     }
   });
