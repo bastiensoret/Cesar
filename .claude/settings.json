@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la c:/Users/BSOR/CascadeProjects/Cesar/*.png c:/Users/BSOR/CascadeProjects/Cesar/static/icons/ c:/Users/BSOR/CascadeProjects/Cesar/store-assets/)"
+    ]
+  }
+}

@@ -92,8 +92,6 @@ export class FeedScanner {
           // Ignore
         }
 
-        this.engine.updateStats(result.flagged || (hasApiKey && result.score >= CONFIG.LLM_SCORE_THRESHOLD_LOW));
-
         if (hasApiKey) {
           // WITH API KEY: lower threshold, LLM confirms ambiguous cases
           if (result.score >= CONFIG.LLM_SCORE_THRESHOLD_HIGH) {

@@ -5,13 +5,15 @@ Thanks for your interest in fighting parasitic lead magnets on LinkedIn! Here's 
 ## Quick start
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/cesar-extension.git
-cd cesar-extension
+git clone https://github.com/bastiensoret/Cesar.git
+cd Cesar
+npm install
+npm run build
 ```
 
 1. Open Chrome → `chrome://extensions/`
 2. Enable **Developer mode**
-3. Click **Load unpacked** → select the repo folder
+3. Click **Load unpacked** → select the `dist/` folder
 4. Go to linkedin.com and scroll your feed
 
 ## How to contribute
@@ -24,7 +26,7 @@ Open an issue with:
 - The post URL if possible
 
 ### Add regex patterns
-The detection patterns live in `content.js` in the `THIRD_PARTY_PATTERNS` and `GATING_CTA_PATTERNS` arrays. To add a new pattern:
+The detection patterns live in `src/content/` in the `THIRD_PARTY_PATTERNS` and `GATING_CTA_PATTERNS` arrays. To add a new pattern:
 
 1. Identify a recurring CTA or third-party attribution phrase
 2. Write a regex that matches it (test on regex101.com first)
@@ -37,12 +39,12 @@ LinkedIn changes their DOM structure frequently. If César stops detecting posts
 
 1. Open DevTools on LinkedIn
 2. Inspect the post structure and find the new selectors
-3. Update the selectors in `content.js` (search for `querySelector`)
+3. Update the selectors in `src/content/` (search for `querySelector`)
 4. Test that scanning works again
 5. Submit a PR
 
 ### Improve the LLM prompt
-The system prompt lives in `background.js` in the `SYSTEM_PROMPT` constant. If you find a false positive or false negative with AI enabled:
+The system prompt lives in `src/background/` in the `SYSTEM_PROMPT` constant. If you find a false positive or false negative with AI enabled:
 
 1. Share the post text and the LLM's response
 2. Suggest a prompt modification that would fix it
@@ -58,15 +60,15 @@ Currently César detects FR and EN patterns. To add a new language:
 
 ## Code structure
 
-| File | Purpose |
-|------|---------|
-| `manifest.json` | Chrome Extension Manifest V3 config |
-| `content.js` | Detection engine + overlay injection (the main file) |
-| `overlay.css` | Dark blue badge styles |
-| `background.js` | Service worker — LLM API routing + prompt caching |
-| `debug.js` | MAIN world bridge for console debugging |
-| `popup.html` | Extension popup UI |
-| `popup.js` | Popup logic (settings, API key, toggles) |
+| Directory | Purpose |
+|-----------|---------|
+| `src/content/` | Content script — detection engine + overlay injection |
+| `src/background/` | Service worker — LLM API routing + prompt caching |
+| `src/popup/` | Extension popup UI (HTML + CSS + JS) |
+| `src/debug/` | MAIN world bridge for console debugging |
+| `src/shared/` | Shared utilities (storage, sanitization) |
+| `static/` | Icons and CSS copied to dist/ as-is |
+| `tests/` | Vitest unit tests with jsdom |
 
 ## Coding conventions
 
@@ -74,8 +76,8 @@ Currently César detects FR and EN patterns. To add a new language:
 - LLM-generated content adapts to post language
 - Pattern labels in English
 - Console logs prefixed with `[César]`
-- No external dependencies in the extension (no npm, no build step)
-- Test with `node -c filename.js` before committing
+- No external runtime dependencies — fetch-only for LLM calls
+- Run `npm run lint` and `npm run test` before committing
 
 ## Pull request process
 

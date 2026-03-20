@@ -64,13 +64,16 @@ The provider is auto-detected from the API key prefix. Prompt caching is enabled
 ### From source (developer mode)
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/cesar-extension.git
+git clone https://github.com/bastiensoret/Cesar.git
+cd Cesar
+npm install
+npm run build
 ```
 
 1. Open Chrome → `chrome://extensions/`
 2. Enable **Developer mode** (toggle top right)
 3. Click **Load unpacked**
-4. Select the `cesar-extension/` folder
+4. Select the `dist/` folder
 5. Go to [linkedin.com/feed](https://www.linkedin.com/feed/) and scroll
 
 ### Configuration (optional)
@@ -86,18 +89,21 @@ Without an API key, César works in regex-only mode (capped at 75%).
 ## Architecture
 
 ```
-cesar-extension/
-├── manifest.json      # Chrome Extension Manifest V3
-├── content.js         # Detection engine + overlay injection (3-layer scoring)
-├── overlay.css        # Dark blue badge styles
-├── background.js      # Service worker — multi-LLM API routing + prompt caching
-├── debug.js           # MAIN world bridge for console debugging
-├── popup.html         # Extension popup UI
-├── popup.js           # Popup logic (settings, API key, toggles)
-└── icons/
-    ├── icon16.png
-    ├── icon48.png
-    └── icon128.png
+Cesar/
+├── manifest.json          # Chrome Extension Manifest V3
+├── build.js               # esbuild bundler (dev/build/package)
+├── src/
+│   ├── content/           # Content script — detection engine + overlay injection
+│   ├── background/        # Service worker — multi-LLM API routing + prompt caching
+│   ├── popup/             # Extension popup UI (HTML + CSS + JS)
+│   ├── debug/             # MAIN world bridge for console debugging
+│   └── shared/            # Utilities shared across modules
+├── static/
+│   ├── icons/             # Extension icons (16, 48, 128)
+│   └── overlay.css        # Dark blue badge styles
+├── store-assets/          # Chrome Web Store assets (screenshots, promo tile)
+├── tests/                 # Vitest unit tests with jsdom
+└── dist/                  # Build output (gitignored)
 ```
 
 ### Key design decisions
@@ -148,8 +154,6 @@ Debug logs show the full layer breakdown:
 
 ### Next up
 - [ ] Web search integration (LLM with internet access for verified source URLs)
-- [ ] GitHub repository + open source setup
-- [ ] Chrome Web Store publication
 
 ### Community features
 - [ ] Backend + database for storing detections
