@@ -14,6 +14,8 @@ All notable changes to César are documented here.
 - Bundle size reporting in build output (metafile)
 
 ### Fixed
+- Comment prefill polls for editor (up to 2s) instead of fixed 500ms delay — fixes race on slow connections
+- Comment prefill scopes broader search to same post ancestor — prevents injecting into wrong post
 - `escapeHTML` rewritten as pure string replacement — works in service workers (no `document` dependency)
 - `chrome.storage` wrappers now properly reject on `runtime.lastError`
 - LLM error handlers use `await` instead of `return` (errors were silently swallowed)
@@ -22,6 +24,22 @@ All notable changes to César are documented here.
 - Removed stale `reason_fr` fallbacks from overlay manager and feed scanner
 
 ### Changed
+- Overlay dismiss animates out (scale + fade) instead of `display: none` — smoother UX
+- Inline styles replaced with CSS classes across overlay manager and popup (no more `style.color` in JS)
+- All `!important` rules removed from overlay CSS — specificity fixed via selector weight
+- Text arrows (`▼`) replaced with inline SVGs for cross-platform consistency
+- AbortController wired to all overlay event listeners for proper cleanup on re-inject
+- Overlay CSS resets font properties on `*` to prevent LinkedIn style bleed
+- Popup: `html lang` changed from `fr` to `en`; scrollbar styled; `max-height` on reveal panel reduced
+- Minimum font sizes raised to 11px across badges, labels, and footer for readability
+- Low-contrast text colors bumped (`#606078` → `#9a9ab0`, `#3a3a4e` → `#9a9ab0`)
+- Added `aria-label`, `aria-expanded`, `aria-controls`, and proper `<label>` associations across popup and overlay
+- Added `focus-visible` ring on all interactive elements (popup toggles, buttons, inputs, selects)
+- Added `prefers-reduced-motion` media query — disables slide-in, pulse, and spin animations
+- Added severity label badges (HIGH / MED / LOW) in overlay header
+- Added spinner animation on loader icon during comment prefill
+- Added LinkedIn dark-mode border contrast override for badges
+- Feedback buttons: clicking one now dims the others (`sourceit-btn-acted`)
 - Data attributes renamed from `data-sourceit-*` to `data-cesar-*`
 - Debug mode off by default in production (`CONFIG.DEBUG = false`)
 - Third-party regex patterns use Unicode-aware `\p{L}` for accented characters
